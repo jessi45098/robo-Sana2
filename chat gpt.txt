@@ -1,0 +1,43 @@
+import robocode.*;
+import java.awt.Color;
+
+// Classe do robô Sana
+public class Sana extends AdvancedRobot {
+
+    // Método run() que é chamado quando o jogo começa
+    public void run() {
+        // Configura a cor do robô para rosa
+        setBodyColor(Color.pink);
+        setGunColor(Color.pink);
+        setRadarColor(Color.pink);
+        setScanColor(Color.pink);
+        setBulletColor(Color.white);
+
+        // Loop principal do robô
+        while (true) {
+            // Gira o radar para procurar outros robôs
+            turnRadarRight(360);
+        }
+    }
+
+    // Método onScannedRobot() é chamado quando um robô é detectado
+    public void onScannedRobot(ScannedRobotEvent e) {
+        // Obtém o nome do robô escaneado
+        String scannedRobotName = e.getName();
+
+        // Desativa a função do outro robô
+        disable(scannedRobotName);
+
+        // Dispara uma bala branca para derrotar o outro robô
+        fire(3);
+
+        // Gira o canhão para se preparar para atirar novamente
+        turnGunRight(360);
+    }
+
+    // Método onHitByBullet() é chamado quando o robô é atingido por uma bala
+    public void onHitByBullet(HitByBulletEvent e) {
+        // Vira 90 graus para evitar ser atingido repetidamente
+        turnRight(90);
+    }
+}

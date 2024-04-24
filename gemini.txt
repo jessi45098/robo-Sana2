@@ -1,0 +1,67 @@
+import java.awt.Color;
+import java.util.Random;
+
+// Classe principal do robô Sana
+public class Sana extends AdvancedRobot {
+
+    // Variáveis para controlar o comportamento do robô
+    private Random random = new Random();
+    private boolean inimigoDesativado = false;
+
+    // Método inicial do robô
+    public void run() {
+        // Definir a cor do robô
+        setBodyColor(Color.PINK);
+
+        // Loop principal do robô
+        while (true) {
+            // Buscar por inimigos próximos
+            ScanResult[] resultadosScan = getScanResults();
+
+            // Verificar se há inimigos
+            if (resultadosScan.length > 0) {
+                // Obter o inimigo mais próximo
+                ScanResult resultadoScanMaisProximo = resultadosScan[0];
+
+                // Calcular a distância e o ângulo para o inimigo
+                double distancia = resultadoScanMaisProximo.getDistance();
+                double angulo = resultadoScanMaisProximo.getHeading();
+
+                // Tomar decisões com base na distância e no ângulo
+                if (distancia < 100) {
+                    // Se o inimigo estiver próximo, tentar desativá-lo
+                    if (!inimigoDesativado) {
+                        fireBullet(0.3); // Atirar com potência 0.3
+                        inimigoDesativado = true; // Marcar o inimigo como desativado
+                    }
+                } else if (distancia < 200) {
+                    // Se o inimigo estiver a uma distância média, girar em direção a ele
+                    setTurnGunRight(angulo);
+                    execute();
+                } else {
+                    // Se o inimigo estiver longe, mover aleatoriamente
+                    setTurnAngle(random.nextInt(360) - 180);
+                    setAhead(random.nextInt(100) - 50);
+                    execute();
+                }
+            } else {
+                // Se não houver inimigos, girar o radar
+                setTurnRadarRight(360);
+                execute();
+            }
+        }
+    }
+
+    // Método para disparar fumaça branca (a ser implementado)
+    public void fireSmoke() {
+        // Implementar lógica para disparar fumaça branca
+        // (pode usar setFire(Color.WHITE) ou outra técnica)
+    }
+
+    // Método para verificar se o inimigo está desativado (a ser implementado)
+    public boolean isEnemyDisabled() {
+        // Implementar lógica para verificar se o inimigo está desativado
+        // (pode usar eventos de status do robô ou outras técnicas)
+        return inimigoDesativado;
+    }
+}
